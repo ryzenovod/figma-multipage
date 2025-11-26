@@ -8,7 +8,7 @@ const Footer = () => (
       <div className={styles.inner}>
         <div>
           <div className={styles.logo}>TalkReady</div>
-          <p className={styles.muted}>Tools to get ready for remote interviews.</p>
+          <p className={styles.muted}>Инструменты для подготовки к удалённым собеседованиям.</p>
         </div>
         <div className={styles.links}>
           {pageMap.map((page) => (
@@ -18,7 +18,7 @@ const Footer = () => (
           ))}
         </div>
       </div>
-      <div className={styles.bottom}>© {new Date().getFullYear()} TalkReady. All rights reserved.</div>
+      <div className={styles.bottom}>© {new Date().getFullYear()} TalkReady. Все права защищены.</div>
     </div>
   </footer>
 );

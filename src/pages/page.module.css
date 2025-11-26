@@ -98,19 +98,33 @@
   font-weight: 600;
 }
 
-.modalPreview {
-  background: var(--card);
-  border-radius: var(--radius-lg);
-  border: 1px solid var(--border);
-  box-shadow: var(--shadow);
+.modalBackdrop {
+  position: fixed;
+  inset: 0;
+  background: rgba(17, 24, 39, 0.55);
+  display: flex;
+  align-items: center;
+  justify-content: center;
   padding: 20px;
+  z-index: 20;
 }
 
-.modalOverlay {
-  background: rgba(33, 37, 44, 0.6);
-  padding: 16px;
+.modalCard {
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow);
+  padding: 22px;
+  max-width: 520px;
+  width: min(520px, 100%);
+}
+
+.toastCard {
+  margin-top: 16px;
   border-radius: var(--radius-md);
-  color: white;
+  padding: 16px;
+  background: var(--primary-soft);
+  border: 1px solid rgba(2, 103, 255, 0.12);
 }
 
 @media (max-width: 900px) {

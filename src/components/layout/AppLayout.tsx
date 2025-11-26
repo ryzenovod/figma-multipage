@@ -13,7 +13,7 @@ const AppLayout = () => {
       <Header pages={pageMap} />
       <main className={styles.main}>
         <div className="container">
-          <div className={styles.breadcrumbs}>Home / {current.label}</div>
+          <div className={styles.breadcrumbs}>Главная / {current.label}</div>
           <Outlet />
         </div>
       </main>

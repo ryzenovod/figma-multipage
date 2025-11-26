@@ -1,10 +1,9 @@
 const pageMap = [
-  { path: '/', label: 'Before Interview' },
-  { path: '/camera', label: 'Camera' },
-  { path: '/microphone', label: 'Microphone' },
-  { path: '/screen', label: 'Screen' },
-  { path: '/interview', label: 'Interview' },
-  { path: '/modal', label: 'Модалка' },
+  { path: '/', label: 'Перед собеседованием' },
+  { path: '/camera', label: 'Камера' },
+  { path: '/microphone', label: 'Микрофон' },
+  { path: '/screen', label: 'Экран' },
+  { path: '/interview', label: 'Интервью' },
 ];
 
 export default pageMap;

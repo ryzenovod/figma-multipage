@@ -12,7 +12,7 @@ const Header = ({ pages }: HeaderProps) => (
     <div className="container">
       <div className={styles.inner}>
         <div className={styles.brand}>TalkReady</div>
-        <nav className={styles.nav} aria-label="Main navigation">
+        <nav className={styles.nav} aria-label="Главная навигация">
           {pages.map((page) => (
             <NavLink
               key={page.path}
@@ -23,7 +23,7 @@ const Header = ({ pages }: HeaderProps) => (
             </NavLink>
           ))}
         </nav>
-        <PrimaryButton label="Start interview" variant="ghost" size="sm" />
+        <PrimaryButton label="Начать интервью" variant="ghost" size="sm" />
       </div>
     </div>
   </header>

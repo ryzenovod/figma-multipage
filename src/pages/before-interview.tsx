@@ -1,31 +1,37 @@
+import { useNavigate } from 'react-router-dom';
 import PageIntro from '../components/sections/PageIntro';
 import StepCard from '../components/sections/StepCard';
 import styles from './page.module.css';
 
-const BeforeInterviewPage = () => (
-  <div className="section">
-    <PageIntro
-      title="Before the interview"
-      description="Walk through a short checklist to ensure your connection, camera, microphone and lighting are ready. A calm pre-flight helps you enter the conversation focused."
-      tag="Preparation"
-      actionLabel="Begin checks"
-    />
-    <div className={`${styles.grid} grid`}>
-      <StepCard
-        title="Connection test"
-        description="Verify network stability and latency. We automatically detect jitter and recommend switching to wired connection if spikes appear."
-        badge="Good"
+const BeforeInterviewPage = () => {
+  const navigate = useNavigate();
+
+  return (
+    <div className="section">
+      <PageIntro
+        title="Перед собеседованием"
+        description="Пройдите короткий чек-лист, чтобы убедиться в стабильном соединении, настроенной камере, микрофоне и свете. Спокойная подготовка помогает начать разговор сфокусировано."
+        tag="Подготовка"
+        actionLabel="Начать проверку"
+        onAction={() => navigate('/camera')}
       />
-      <StepCard
-        title="Space setup"
-        description="Position yourself at eye-level with the camera. Keep background simple and light. Avoid backlight and close unused tabs."
-      />
-      <StepCard
-        title="Documents"
-        description="Keep your resume, portfolio and job description open in a nearby window. You can pin them to quick access for screen sharing."
-      />
+      <div className={`${styles.grid} grid`}>
+        <StepCard
+          title="Тест соединения"
+          description="Проверьте стабильность сети и задержку. Мы отслеживаем скачки и подскажем, если стоит перейти на проводное подключение."
+          badge="Хорошо"
+        />
+        <StepCard
+          title="Настройка места"
+          description="Расположите камеру на уровне глаз, фон — простой и светлый. Избегайте подсветки сзади и закройте лишние вкладки."
+        />
+        <StepCard
+          title="Документы"
+          description="Держите резюме, портфолио и описание вакансии в соседнем окне. Закрепите их для быстрого доступа при демонстрации экрана."
+        />
+      </div>
     </div>
-  </div>
-);
+  );
+};
 
 export default BeforeInterviewPage;

@@ -9,12 +9,13 @@
 - CSS Modules
 
 ## Соответствие страниц макетам
-- `/` – **Before Interview** (`screens/Before interview.png`)
-- `/camera` – **Camera** (`screens/Camera.png`)
-- `/microphone` – **Microphone** (`screens/Microphone.png`)
-- `/screen` – **Screen** (`screens/Screen.png`)
-- `/interview` – **Interview** (`screens/Interview.png`)
-- `/modal` – **Модалка** (`screens/Модалка.png`)
+- `/` – **Перед собеседованием** (`screens/Before interview.png`)
+- `/camera` – **Камера** (`screens/Camera.png`)
+- `/microphone` – **Микрофон** (`screens/Microphone.png`)
+- `/screen` – **Экран** (`screens/Screen.png`)
+- `/interview` – **Интервью** (`screens/Interview.png`)
+
+Модальное подтверждение завершения звонка запускается на странице интервью по кнопке «Завершить звонок» и повторяет макет `screens/Модалка.png`.
 
 ## Установка и запуск
 ```bash
