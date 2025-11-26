@@ -7,7 +7,6 @@ import CameraPage from './pages/camera';
 import MicrophonePage from './pages/microphone';
 import ScreenPage from './pages/screen';
 import InterviewPage from './pages/interview';
-import ModalPage from './pages/modal';
 import './styles/global.css';
 
 const router = createBrowserRouter([
@@ -20,7 +19,6 @@ const router = createBrowserRouter([
       { path: 'microphone', element: <MicrophonePage /> },
       { path: 'screen', element: <ScreenPage /> },
       { path: 'interview', element: <InterviewPage /> },
-      { path: 'modal', element: <ModalPage /> },
     ],
   },
   { path: '*', element: <Navigate to="/" replace /> },

@@ -7,15 +7,16 @@ interface PageIntroProps {
   description: string;
   tag?: string;
   actionLabel?: string;
+  onAction?: () => void;
 }
 
-const PageIntro = ({ title, description, tag, actionLabel }: PageIntroProps) => (
+const PageIntro = ({ title, description, tag, actionLabel, onAction }: PageIntroProps) => (
   <div className={`${styles.intro} card`}>
     <div>
       {tag ? <Badge label={tag} /> : null}
       <h1 className={styles.title}>{title}</h1>
       <p className={styles.description}>{description}</p>
-      {actionLabel ? <PrimaryButton label={actionLabel} /> : null}
+      {actionLabel ? <PrimaryButton label={actionLabel} onClick={onAction} /> : null}
     </div>
     <div className={styles.badgeBox}>
       <div className={styles.metric}>
