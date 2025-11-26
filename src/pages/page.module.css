@@ -1,0 +1,120 @@
+.grid {
+  grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+  margin-top: 18px;
+}
+
+.split {
+  display: grid;
+  grid-template-columns: 1.1fr 0.9fr;
+  gap: 18px;
+}
+
+.panelTitle {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 10px;
+}
+
+.panelTitle h2 {
+  margin: 0;
+}
+
+.muted {
+  color: var(--muted);
+}
+
+.metricBox {
+  display: grid;
+  gap: 12px;
+  grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+}
+
+.videoBox,
+.audioBox,
+.screenBox {
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-lg);
+  padding: 20px;
+  box-shadow: var(--shadow);
+}
+
+.videoPreview {
+  background: linear-gradient(135deg, #f1f5ff, #ffffff);
+  border-radius: var(--radius-md);
+  height: 320px;
+  display: grid;
+  place-items: center;
+  color: var(--muted);
+  border: 1px dashed var(--border);
+}
+
+.controls {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin-top: 14px;
+}
+
+.waveform {
+  height: 110px;
+  border-radius: var(--radius-md);
+  background: repeating-linear-gradient(
+      90deg,
+      rgba(2, 103, 255, 0.16),
+      rgba(2, 103, 255, 0.16) 10px,
+      rgba(2, 103, 255, 0.06) 10px,
+      rgba(2, 103, 255, 0.06) 20px
+    ),
+    #fff;
+  border: 1px dashed var(--border);
+}
+
+.table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 12px;
+}
+
+.table th,
+.table td {
+  padding: 12px;
+  border-bottom: 1px solid var(--border);
+  text-align: left;
+}
+
+.chipRow {
+  display: flex;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+
+.chip {
+  background: var(--primary-soft);
+  color: var(--primary);
+  border-radius: 999px;
+  padding: 8px 12px;
+  font-weight: 600;
+}
+
+.modalPreview {
+  background: var(--card);
+  border-radius: var(--radius-lg);
+  border: 1px solid var(--border);
+  box-shadow: var(--shadow);
+  padding: 20px;
+}
+
+.modalOverlay {
+  background: rgba(33, 37, 44, 0.6);
+  padding: 16px;
+  border-radius: var(--radius-md);
+  color: white;
+}
+
+@media (max-width: 900px) {
+  .split {
+    grid-template-columns: 1fr;
+  }
+}
