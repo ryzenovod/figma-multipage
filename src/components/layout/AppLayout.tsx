@@ -7,17 +7,21 @@ import pageMap from '../../pages/page-map';
 const AppLayout = () => {
   const location = useLocation();
   const current = pageMap.find((page) => page.path === location.pathname) ?? pageMap[0];
+  
+ 
+  const noHeaderPages = ['/chat'];
+  const showHeader = !noHeaderPages.includes(location.pathname);
 
   return (
     <div className={styles.wrapper}>
-      <Header pages={pageMap} />
+      {showHeader && <Header pages={pageMap} />}
       <main className={styles.main}>
         <div className="container">
-          <div className={styles.breadcrumbs}>Главная / {current.label}</div>
+          {showHeader && <div className={styles.breadcrumbs}>Главная / {current.label}</div>}
           <Outlet />
         </div>
       </main>
-      <Footer />
+      {showHeader && <Footer />}
     </div>
   );
 };
