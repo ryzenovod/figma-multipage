@@ -1,23 +1,26 @@
 import React, { useState, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
 import styles from './page.module.css';
 
 const InterviewChatPage = () => {
+  const navigate = useNavigate();
+    
   const [messages, setMessages] = useState([
     {
       id: 1,
-      sender: 'Бот',
-      text: 'Андрей, привет! Меня зовут ИИ-интервьювер я твой бот ',
+      sender: 'Саша',
+      text: 'Андрей, привет! Меня зовут Саша и сетевой в Риву президента твой интересно.',
       time: '01:24'
     },
     {
       id: 2,
       sender: 'Андрей', 
-      text: 'Привет! Моей врагу! Андрей,  У меня больше 30 лет опыта.',
+      text: 'Привет! Моей врагу! Андрей, а хочешь развернуться… У меня больше 30 лет опыта.',
       time: '01:24'
     },
     {
       id: 3,
-      sender: 'Бот',
+      sender: 'Саша',
       text: '',
       time: '01:24'
     }
@@ -29,6 +32,7 @@ const InterviewChatPage = () => {
   });
   
   const [isInterviewActive, setIsInterviewActive] = useState(true);
+  const [showEndModal, setShowEndModal] = useState(false);
 
   useEffect(() => {
     localStorage.setItem('interviewTimeLeft', timeLeft.toString());
@@ -63,6 +67,12 @@ const InterviewChatPage = () => {
     if (timeLeft > 1200) return '#10b981';
     if (timeLeft > 300) return '#f59e0b';
     return '#ef4444';
+  };
+
+  const handleEndInterview = () => {
+    setIsInterviewActive(false);
+    setShowEndModal(false);
+    navigate('/interview');
   };
 
   return (
@@ -158,7 +168,7 @@ const InterviewChatPage = () => {
             
             <button 
               className={`${styles.btn} ${styles['call-btn']}`} 
-              onClick={() => setIsInterviewActive(false)}
+              onClick={() => setShowEndModal(true)}
               style={{
                 borderRadius: '50%',
                 width: '60px',
@@ -210,13 +220,25 @@ const InterviewChatPage = () => {
       </div>
 
       <div className={styles.chatContainer}>
-        
+        <div className={styles.chatHeader}>
+          <div className={styles.chatTime} style={{
+            color: timeLeft < 300 ? '#ef4444' : 'white',
+            fontWeight: timeLeft < 300 ? '600' : 'normal'
+          }}>
+            {formatTime(timeLeft)}
+          </div>
+          <div className={styles.chatParticipants}>
+            <span className={styles.chatParticipant}>Саша</span>
+            <span className={styles.chatDivider}>|</span>
+            <span className={styles.chatParticipant}>Андрей</span>
+          </div>
+        </div>
 
         <div className={styles.messagesContainer}>
           {messages.map((message) => (
             <div 
               key={message.id} 
-              className={`${styles.message} ${message.sender === 'Бот' ? styles.sasha : styles.andrey}`}
+              className={`${styles.message} ${message.sender === 'Саша' ? styles.sasha : styles.andrey}`}
             >
               <div className={styles.messageHeader}>
                 <span className={styles.messageSender}>{message.sender}</span>
@@ -242,6 +264,31 @@ const InterviewChatPage = () => {
           </div>
         </div>
       </div>
+
+      {showEndModal && (
+        <div className={styles.modalOverlay}>
+          <div className={styles.endModal}>
+            <h3>Завершить интервью досрочно</h3>
+            <p>Интервью автоматически завершится, а ваш ответы будут отправлены на проверку</p>
+            <div className={styles.modalButtons}>
+              <button 
+                className={styles.confirmButton}
+                onClick={handleEndInterview}
+                style={{background: '#2b80ff', color: 'white'}}
+              >
+                Завершить интервью
+              </button>
+              <button 
+                className={styles.cancelButton}
+                onClick={() => setShowEndModal(false)}
+                style={{background: '#e0edff', color: '#2b80ff'}}
+              >
+                Отмена
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 };
