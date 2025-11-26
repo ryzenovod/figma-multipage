@@ -1,0 +1,50 @@
+.intro {
+  display: grid;
+  grid-template-columns: 1fr auto;
+  align-items: center;
+  gap: 18px;
+}
+
+.title {
+  font-size: clamp(28px, 2.4vw, 36px);
+  margin: 10px 0 8px;
+}
+
+.description {
+  color: var(--muted);
+  line-height: 1.6;
+  max-width: 680px;
+  margin-bottom: 14px;
+}
+
+.badgeBox {
+  display: grid;
+  gap: 12px;
+  justify-items: center;
+  padding: 12px 18px;
+  border: 1px dashed var(--border);
+  border-radius: var(--radius-md);
+  background: var(--primary-soft);
+}
+
+.metric {
+  text-align: center;
+}
+
+.metricLabel {
+  color: var(--muted);
+  font-size: 14px;
+}
+
+.metricValue {
+  display: block;
+  font-size: 22px;
+  margin-top: 6px;
+  color: var(--text-strong);
+}
+
+@media (max-width: 768px) {
+  .intro {
+    grid-template-columns: 1fr;
+  }
+}
