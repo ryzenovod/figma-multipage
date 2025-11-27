@@ -39,9 +39,12 @@
   padding: 20px;
   box-shadow: var(--shadow);
 }
+<<<<<<< HEAD
 .videoBox{
   background: none;
 }
+=======
+>>>>>>> 54e247c10a677c793edcc2a5e2e49c1597e4b311
 
 .videoPreview {
   background: linear-gradient(135deg, #f1f5ff, #ffffff);
@@ -193,6 +196,7 @@
   font-size: 13px;
 }
 
+<<<<<<< HEAD
 
 /*chat*/
 /* Chat Specific Styles */
@@ -265,11 +269,14 @@
   }
 }
 
+=======
+>>>>>>> 54e247c10a677c793edcc2a5e2e49c1597e4b311
 @media (max-width: 900px) {
   .split {
     grid-template-columns: 1fr;
   }
 }
+<<<<<<< HEAD
 /* Основной grid контейнер */
 .grid-chat-box {
   display: grid;
@@ -575,3 +582,5 @@
     transform: scale(1) translateY(0);
   }
 }
+=======
+>>>>>>> 54e247c10a677c793edcc2a5e2e49c1597e4b311
