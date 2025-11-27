@@ -1,7 +1,3 @@
-node_modules
-.dist
-dist
-*.log
-.vscode
-.DS_Store
-*.tsbuildinfo
+__pycache__/
+*.pyc
+backend/.venv/
