@@ -211,7 +211,7 @@ const InterviewChatPage = () => {
           <span>Осталось: {formatTime(timeLeft)}</span>
           <span>Прошло: {formatTime(3600 - timeLeft)}</span>
           <span style={{ 
-            color: timeLeft < 300 ? '#ef4444' : 'var(--muted)',
+            color: timeLeft < 300 ? '#ef4445' : 'var(--muted)',
             fontWeight: timeLeft < 300 ? '600' : 'normal'
           }}>
             {Math.round(formatProgress(timeLeft))}%

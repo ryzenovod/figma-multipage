@@ -8,9 +8,8 @@ import styles from './page.module.css';
 const InterviewPage = () => {
   const [isEndCallOpen, setIsEndCallOpen] = useState(false);
   const navigate = useNavigate();
-
+  const n;
   const closeModal = () => setIsEndCallOpen(false);
-
   return (
     <div className="section">
       <PageIntro
