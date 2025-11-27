@@ -1,0 +1,36 @@
+.button {
+  border: none;
+  outline: none;
+  cursor: pointer;
+  font-weight: 700;
+  border-radius: 12px;
+  transition: all 0.2s ease;
+}
+
+.solid {
+  background: var(--primary);
+  color: white;
+  box-shadow: 0 14px 30px rgba(2, 103, 255, 0.25);
+  padding: 12px 18px;
+}
+
+.solid:hover {
+  transform: translateY(-1px);
+}
+
+.ghost {
+  background: transparent;
+  color: var(--text-strong);
+  border: 1px solid var(--border);
+  padding: 10px 14px;
+}
+
+.sm {
+  padding: 10px 14px;
+  font-size: 14px;
+}
+
+.md {
+  padding: 12px 18px;
+  font-size: 15px;
+}
