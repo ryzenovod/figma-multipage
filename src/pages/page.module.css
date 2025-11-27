@@ -582,5 +582,116 @@
     transform: scale(1) translateY(0);
   }
 }
-=======
->>>>>>> 54e247c10a677c793edcc2a5e2e49c1597e4b311
+/* Новая grid структура */
+.grid-chat-ide {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  height: 100vh;
+  padding: 20px;
+}
+
+.topRow {
+  display: grid;
+  grid-template-columns: 1fr 400px;
+  gap: 20px;
+  height: 60vh;
+}
+
+/* Видео контейнер */
+.videoContainer {
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-lg);
+  padding: 20px;
+  display: flex;
+  flex-direction: column;
+  box-shadow: var(--shadow);
+}
+
+.videoContent {
+  flex: 1;
+  position: relative;
+  background: transparent;
+  border-radius: var(--radius-md);
+  overflow: hidden;
+}
+
+/* Чат контейнер */
+.chatContainer {
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-lg);
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  box-shadow: var(--shadow);
+}
+
+/* IDE контейнер */
+.ideContainer {
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-lg);
+  overflow: hidden;
+  box-shadow: var(--shadow);
+  height: 35vh;
+  display: flex;
+  flex-direction: column;
+}
+
+.ideHeader {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 12px 16px;
+  background: var(--text-strong);
+  color: white;
+  font-weight: 600;
+}
+
+.sendCodeButton {
+  background: #10b981;
+  color: white;
+  border: none;
+  padding: 8px 16px;
+  border-radius: var(--radius-md);
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.sendCodeButton:hover {
+  background: #059669;
+  transform: translateY(-1px);
+}
+
+.codeEditor {
+  flex: 1;
+  width: 100%;
+  border: none;
+  padding: 16px;
+  font-family: 'JetBrains Mono', 'Fira Code', monospace;
+  font-size: 14px;
+  line-height: 1.5;
+  background: #0b1220;
+  color: #e3e8f5;
+  resize: none;
+  outline: none;
+}
+
+/* Адаптивность */
+@media (max-width: 768px) {
+  .topRow {
+    grid-template-columns: 1fr;
+    height: auto;
+  }
+  
+  .grid-chat-ide {
+    height: auto;
+  }
+  
+  .ideContainer {
+    height: 300px;
+  }
+}

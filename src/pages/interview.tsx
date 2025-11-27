@@ -8,14 +8,9 @@ import styles from './page.module.css';
 const InterviewPage = () => {
   const [isEndCallOpen, setIsEndCallOpen] = useState(false);
   const navigate = useNavigate();
-<<<<<<< HEAD
-  const n;
-  const closeModal = () => setIsEndCallOpen(false);
-=======
-
+  
   const closeModal = () => setIsEndCallOpen(false);
 
->>>>>>> 54e247c10a677c793edcc2a5e2e49c1597e4b311
   return (
     <div className="section">
       <PageIntro
@@ -23,10 +18,9 @@ const InterviewPage = () => {
         description="В браузерной IDE идёт живой созвон. Видеопоток, код и метрики прокторинга отправляются на сервер для скоринга риска."
         tag="В эфире · IDE"
         actionLabel="Присоединиться"
-<<<<<<< HEAD
+
         onAction={()=>{navigate('/chat')}}
-=======
->>>>>>> 54e247c10a677c793edcc2a5e2e49c1597e4b311
+
       />
 
       <div className={styles.split}>
