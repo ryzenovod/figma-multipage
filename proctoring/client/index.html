@@ -1,0 +1,921 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>🔒 Proctoring System - Test Page</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    
+    <!-- MediaPipe библиотеки -->
+    <script src="https://cdn.jsdelivr.net/npm/@mediapipe/tasks-vision@latest/vision_bundle.js" crossorigin="anonymous"></script>
+    
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --primary: #6366f1;
+            --primary-dark: #4f46e5;
+            --success: #10b981;
+            --danger: #ef4444;
+            --warning: #f59e0b;
+            --bg-gradient: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            --card-shadow: 0 10px 40px rgba(0, 0, 0, 0.1);
+            --card-hover: 0 20px 60px rgba(0, 0, 0, 0.15);
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 0;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 50%, #f093fb 100%);
+            background-attachment: fixed;
+            min-height: 100vh;
+        }
+
+        .header {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            padding: 2rem;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.2);
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+        }
+
+        h1 {
+            color: #1e293b;
+            font-size: 2rem;
+            font-weight: 700;
+            margin: 0;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .main-content {
+            padding: 2rem;
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 2rem;
+        }
+
+        @media (max-width: 968px) {
+            .main-content {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        .container {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            padding: 2rem;
+            border-radius: 20px;
+            box-shadow: var(--card-shadow);
+            transition: all 0.3s ease;
+            border: 1px solid rgba(255, 255, 255, 0.3);
+        }
+
+        .container:hover {
+            box-shadow: var(--card-hover);
+            transform: translateY(-2px);
+        }
+
+        .container.full-width {
+            grid-column: 1 / -1;
+        }
+
+        h2 {
+            color: #1e293b;
+            font-size: 1.5rem;
+            font-weight: 600;
+            margin-bottom: 1.5rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .status-container {
+            display: flex;
+            gap: 1rem;
+            align-items: center;
+            margin-bottom: 1.5rem;
+            flex-wrap: wrap;
+        }
+
+        .status {
+            padding: 0.75rem 1.5rem;
+            border-radius: 12px;
+            font-weight: 600;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .status::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.3), transparent);
+            transition: left 0.5s;
+        }
+
+        .status.active::before {
+            left: 100%;
+        }
+
+        .status.active {
+            background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+            color: white;
+            box-shadow: 0 4px 15px rgba(16, 185, 129, 0.4);
+        }
+
+        .status.inactive {
+            background: linear-gradient(135deg, #ef4444 0%, #dc2626 100%);
+            color: white;
+            box-shadow: 0 4px 15px rgba(239, 68, 68, 0.4);
+        }
+
+        .risk-score {
+            font-size: 2.5rem;
+            font-weight: 700;
+            padding: 1.5rem;
+            border-radius: 16px;
+            text-align: center;
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .risk-score::after {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: radial-gradient(circle, rgba(255,255,255,0.1) 0%, transparent 70%);
+            animation: pulse 2s infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% { transform: scale(1); opacity: 0.5; }
+            50% { transform: scale(1.1); opacity: 0.8; }
+        }
+
+        .risk-low {
+            background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+            color: white;
+            box-shadow: 0 8px 25px rgba(16, 185, 129, 0.3);
+        }
+
+        .risk-medium {
+            background: linear-gradient(135deg, #f59e0b 0%, #d97706 100%);
+            color: white;
+            box-shadow: 0 8px 25px rgba(245, 158, 11, 0.3);
+        }
+
+        .risk-high {
+            background: linear-gradient(135deg, #ef4444 0%, #dc2626 100%);
+            color: white;
+            box-shadow: 0 8px 25px rgba(239, 68, 68, 0.3);
+            animation: shake 0.5s;
+        }
+
+        @keyframes shake {
+            0%, 100% { transform: translateX(0); }
+            25% { transform: translateX(-5px); }
+            75% { transform: translateX(5px); }
+        }
+
+        .controls {
+            display: flex;
+            gap: 1rem;
+            margin-top: 1.5rem;
+        }
+
+        button {
+            padding: 0.875rem 2rem;
+            border: none;
+            border-radius: 12px;
+            cursor: pointer;
+            font-size: 1rem;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+        }
+
+        button::before {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            width: 0;
+            height: 0;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.3);
+            transform: translate(-50%, -50%);
+            transition: width 0.6s, height 0.6s;
+        }
+
+        button:hover::before {
+            width: 300px;
+            height: 300px;
+        }
+
+        button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.3);
+        }
+
+        button:active {
+            transform: translateY(0);
+        }
+
+        button:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        .btn-start {
+            background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+            color: white;
+        }
+
+        .btn-stop {
+            background: linear-gradient(135deg, #ef4444 0%, #dc2626 100%);
+            color: white;
+        }
+
+        .btn-clear {
+            background: linear-gradient(135deg, #6366f1 0%, #4f46e5 100%);
+            color: white;
+            padding: 0.625rem 1.5rem;
+            font-size: 0.875rem;
+        }
+
+        .stats {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: 1rem;
+            margin-top: 1.5rem;
+        }
+
+        .stat-item {
+            padding: 1.5rem;
+            background: linear-gradient(135deg, rgba(99, 102, 241, 0.1) 0%, rgba(139, 92, 246, 0.1) 100%);
+            border-radius: 16px;
+            text-align: center;
+            transition: all 0.3s ease;
+            border: 2px solid transparent;
+        }
+
+        .stat-item:hover {
+            transform: translateY(-5px);
+            border-color: rgba(99, 102, 241, 0.3);
+            box-shadow: 0 8px 25px rgba(99, 102, 241, 0.2);
+        }
+
+        .stat-value {
+            font-size: 2rem;
+            font-weight: 700;
+            background: linear-gradient(135deg, #6366f1 0%, #8b5cf6 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            margin-bottom: 0.5rem;
+        }
+
+        .stat-label {
+            font-size: 0.875rem;
+            color: #64748b;
+            font-weight: 500;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .test-area {
+            border: 3px dashed rgba(99, 102, 241, 0.3);
+            border-radius: 16px;
+            padding: 1.5rem;
+            margin: 1.5rem 0;
+            background: linear-gradient(135deg, rgba(99, 102, 241, 0.05) 0%, rgba(139, 92, 246, 0.05) 100%);
+            transition: all 0.3s ease;
+        }
+
+        .test-area:hover {
+            border-color: rgba(99, 102, 241, 0.5);
+            background: linear-gradient(135deg, rgba(99, 102, 241, 0.1) 0%, rgba(139, 92, 246, 0.1) 100%);
+        }
+
+        .test-area p {
+            color: #64748b;
+            margin-bottom: 1rem;
+            font-weight: 500;
+        }
+
+        .test-area ul {
+            list-style: none;
+            padding: 0;
+        }
+
+        .test-area li {
+            padding: 0.5rem 0;
+            color: #475569;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .test-area li::before {
+            content: '→';
+            color: var(--primary);
+            font-weight: bold;
+        }
+
+        textarea {
+            width: 100%;
+            min-height: 250px;
+            font-family: 'Fira Code', 'Courier New', monospace;
+            padding: 1rem;
+            border: 2px solid rgba(99, 102, 241, 0.2);
+            border-radius: 12px;
+            font-size: 0.875rem;
+            line-height: 1.6;
+            background: rgba(255, 255, 255, 0.8);
+            transition: all 0.3s ease;
+            resize: vertical;
+        }
+
+        textarea:focus {
+            outline: none;
+            border-color: var(--primary);
+            box-shadow: 0 0 0 4px rgba(99, 102, 241, 0.1);
+            background: white;
+        }
+
+        .events-log {
+            max-height: 500px;
+            overflow-y: auto;
+            border: 2px solid rgba(99, 102, 241, 0.1);
+            border-radius: 16px;
+            padding: 1rem;
+            background: linear-gradient(135deg, rgba(15, 23, 42, 0.02) 0%, rgba(30, 41, 59, 0.02) 100%);
+            font-family: 'Fira Code', 'Courier New', monospace;
+            font-size: 0.75rem;
+            margin-top: 1rem;
+        }
+
+        .events-log::-webkit-scrollbar {
+            width: 8px;
+        }
+
+        .events-log::-webkit-scrollbar-track {
+            background: rgba(99, 102, 241, 0.1);
+            border-radius: 10px;
+        }
+
+        .events-log::-webkit-scrollbar-thumb {
+            background: linear-gradient(135deg, #6366f1 0%, #8b5cf6 100%);
+            border-radius: 10px;
+        }
+
+        .event {
+            padding: 1rem;
+            margin: 0.75rem 0;
+            border-left: 4px solid var(--primary);
+            background: white;
+            border-radius: 12px;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+            transition: all 0.3s ease;
+            animation: slideIn 0.3s ease;
+        }
+
+        @keyframes slideIn {
+            from {
+                opacity: 0;
+                transform: translateX(-20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateX(0);
+            }
+        }
+
+        .event:hover {
+            transform: translateX(5px);
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+        }
+
+        .event.critical {
+            border-left-color: var(--danger);
+            background: linear-gradient(135deg, rgba(239, 68, 68, 0.1) 0%, rgba(220, 38, 38, 0.1) 100%);
+            animation: slideIn 0.3s ease, glow 2s infinite;
+        }
+
+        @keyframes glow {
+            0%, 100% { box-shadow: 0 2px 8px rgba(239, 68, 68, 0.3); }
+            50% { box-shadow: 0 4px 20px rgba(239, 68, 68, 0.6); }
+        }
+
+        .event strong {
+            color: var(--primary);
+            font-weight: 600;
+        }
+
+        .event pre {
+            margin-top: 0.5rem;
+            color: #475569;
+            white-space: pre-wrap;
+            word-wrap: break-word;
+        }
+
+        .log-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1rem;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .container {
+            animation: fadeIn 0.5s ease;
+        }
+
+        .container:nth-child(1) { animation-delay: 0.1s; }
+        .container:nth-child(2) { animation-delay: 0.2s; }
+        .container:nth-child(3) { animation-delay: 0.3s; }
+        .container:nth-child(4) { animation-delay: 0.4s; }
+        
+        /* Стили для галереи скриншотов */
+        .screenshot-gallery {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
+            gap: 10px;
+            margin-top: 10px;
+            max-height: 400px;
+            overflow-y: auto;
+        }
+
+        .screenshot-item {
+            border: 2px solid #ddd;
+            border-radius: 8px;
+            padding: 5px;
+            cursor: pointer;
+            transition: transform 0.2s, border-color 0.2s;
+            background: white;
+        }
+
+        .screenshot-item:hover {
+            transform: scale(1.05);
+            border-color: #4CAF50;
+        }
+
+        .screenshot-item.critical {
+            border-color: #f44336;
+            box-shadow: 0 0 10px rgba(244, 67, 54, 0.3);
+        }
+
+        .screenshot-item.warning {
+            border-color: #ff9800;
+            box-shadow: 0 0 10px rgba(255, 152, 0, 0.3);
+        }
+
+        .screenshot-item img {
+            width: 100%;
+            height: auto;
+            display: block;
+            border-radius: 4px;
+        }
+
+        .screenshot-info {
+            font-size: 10px;
+            text-align: center;
+            margin-top: 5px;
+            color: #64748b;
+            font-weight: 500;
+        }
+
+        /* Модальное окно */
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 1000;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0,0,0,0.9);
+            animation: fadeIn 0.3s ease;
+        }
+
+        .modal-content {
+            position: relative;
+            margin: 2% auto;
+            max-width: 90%;
+            max-height: 90%;
+            animation: slideIn 0.3s ease;
+        }
+
+        .modal-content img {
+            width: 100%;
+            height: auto;
+            border-radius: 8px;
+        }
+
+        .close {
+            position: absolute;
+            top: 15px;
+            right: 35px;
+            color: #f1f1f1;
+            font-size: 40px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: color 0.3s;
+            z-index: 1001;
+        }
+
+        .close:hover,
+        .close:focus {
+            color: #ff4444;
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <h1>🛡️ Система защиты от читерства</h1>
+    </div>
+    
+    <div class="main-content">
+        <div class="container">
+            <h2>⚙️ Статус системы</h2>
+            <div class="status-container">
+                <div id="status" class="status inactive">
+                    <span>●</span>
+                    <span>Неактивна</span>
+                </div>
+                <div id="riskScore" class="risk-score risk-low">Риск: 0</div>
+            </div>
+            
+            <div class="controls">
+                <button id="btnStart" class="btn-start" onclick="startProctoring()">
+                    ▶️ Запустить прокторинг
+                </button>
+                <button id="btnStop" class="btn-stop" onclick="stopProctoring()" disabled>
+                    ⏹️ Остановить прокторинг
+                </button>
+            </div>
+        </div>
+        
+        <div class="container">
+            <h2>📊 Статистика</h2>
+            <div class="stats" id="stats">
+                <div class="stat-item">
+                    <div class="stat-value" id="statPastes">0</div>
+                    <div class="stat-label">Вставок</div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-value" id="statCopies">0</div>
+                    <div class="stat-label">Копирований</div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-value" id="statExtensions">0</div>
+                    <div class="stat-label">Расширений</div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-value" id="statDevTools">Нет</div>
+                    <div class="stat-label">DevTools</div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="container full-width">
+            <h2>📹 Видеопрокторинг</h2>
+            <div class="stats">
+                <div class="stat-item">
+                    <div class="stat-value" id="currentFaces">0</div>
+                    <div class="stat-label">Лиц в кадре</div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-value" id="criticalEvents">0</div>
+                    <div class="stat-label">Критических</div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-value" id="warningEvents">0</div>
+                    <div class="stat-label">Предупреждений</div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-value" id="screenshotsCount">0</div>
+                    <div class="stat-label">Скриншотов</div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-value" id="screenshotsUploaded">0</div>
+                    <div class="stat-label">Загружено</div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-value" id="screenshotsSize">0</div>
+                    <div class="stat-label">Размер (MB)</div>
+                </div>
+            </div>
+            
+            <h3 style="margin-top: 1.5rem; color: #1e293b; font-size: 1.1rem;">📸 Галерея скриншотов</h3>
+            <div id="screenshotGallery" class="screenshot-gallery">
+                <!-- Скриншоты будут добавляться динамически -->
+            </div>
+        </div>
+        
+        <div class="container">
+            <h2>📊 Статистика</h2>
+            <div class="stats" id="stats">
+                <div class="stat-item">
+                    <div class="stat-value" id="statPastes">0</div>
+                    <div class="stat-label">Вставок</div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-value" id="statCopies">0</div>
+                    <div class="stat-label">Копирований</div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-value" id="statExtensions">0</div>
+                    <div class="stat-label">Расширений</div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-value" id="statDevTools">Нет</div>
+                    <div class="stat-label">DevTools</div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="container full-width">
+            <h2>💻 Тестовая область</h2>
+            <div class="test-area">
+                <p><strong>Попробуйте протестировать систему:</strong></p>
+                <ul>
+                    <li>Вставить код сюда (Ctrl+V / Cmd+V)</li>
+                    <li>Скопировать текст из другого окна</li>
+                    <li>Открыть DevTools (F12 или Cmd+Option+I)</li>
+                    <li>Использовать расширения браузера</li>
+                </ul>
+                <textarea id="testTextarea" placeholder="Введите или вставьте код сюда...&#10;&#10;Все действия будут отслеживаться системой прокторинга."></textarea>
+            </div>
+        </div>
+        
+        <div class="container full-width">
+            <div class="log-header">
+                <h2>📝 Лог событий</h2>
+                <button class="btn-clear" onclick="clearLog()">🗑️ Очистить лог</button>
+            </div>
+            <div id="eventsLog" class="events-log"></div>
+        </div>
+    </div>
+    
+    <!-- Модальное окно для просмотра скриншота -->
+    <div id="screenshotModal" class="modal">
+        <span class="close">&times;</span>
+        <div class="modal-content">
+            <img id="modalImage" src="" alt="Screenshot">
+        </div>
+    </div>
+    
+    <!-- Подключение модулей -->
+    <script src="clipboard_monitor.js"></script>
+    <script src="devtools_detector.js"></script>
+    <script src="extension_detector.js"></script>
+    <script src="proctoring_client.js"></script>
+    
+    <script>
+        let proctoringClient = null;
+        let eventCount = {
+            pastes: 0,
+            copies: 0,
+            extensions: 0
+        };
+        
+        const screenshotGallery = document.getElementById('screenshotGallery');
+        const screenshotModal = document.getElementById('screenshotModal');
+        const modalImage = document.getElementById('modalImage');
+        const closeModal = document.querySelector('.close');
+
+        // Закрытие модального окна
+        closeModal.onclick = () => {
+            screenshotModal.style.display = 'none';
+        };
+
+        window.onclick = (event) => {
+            if (event.target === screenshotModal) {
+                screenshotModal.style.display = 'none';
+            }
+        };
+        
+        function startProctoring() {
+            // Создаем клиент без детекции лиц
+            proctoringClient = new ProctoringClient({
+                sessionId: 'test_session_' + Date.now(),
+                apiUrl: 'http://localhost:8000/api/proctoring',
+                enableWebSocket: false,
+                enableFaceDetection: false,
+                enableScreenshotUpload: false
+            });
+            
+            // Запускаем
+            proctoringClient.start().then(() => {
+                const statusEl = document.getElementById('status');
+                statusEl.innerHTML = '<span>●</span><span>Активна</span>';
+                statusEl.className = 'status active';
+                document.getElementById('btnStart').disabled = true;
+                document.getElementById('btnStop').disabled = false;
+                
+                addEventToLog({
+                    type: 'system',
+                    message: 'Прокторинг запущен',
+                    timestamp: Date.now()
+                });
+            }).catch(error => {
+                console.error('Ошибка запуска прокторинга:', error);
+                
+                alert('Ошибка запуска: ' + error.message);
+                
+                addEventToLog({
+                    type: 'system',
+                    message: 'Ошибка: ' + error.message,
+                    timestamp: Date.now()
+                }, true);
+            });
+        }
+        
+        function stopProctoring() {
+            if (proctoringClient) {
+                proctoringClient.stop();
+                proctoringClient = null;
+                
+                const statusEl = document.getElementById('status');
+                statusEl.innerHTML = '<span>●</span><span>Неактивна</span>';
+                statusEl.className = 'status inactive';
+                document.getElementById('btnStart').disabled = false;
+                document.getElementById('btnStop').disabled = true;
+                
+                addEventToLog({
+                    type: 'system',
+                    message: 'Прокторинг остановлен',
+                    timestamp: Date.now()
+                });
+            }
+        }
+        
+        function updateRiskScore(score) {
+            const element = document.getElementById('riskScore');
+            element.textContent = 'Риск: ' + score;
+            
+            if (score < 30) {
+                element.className = 'risk-score risk-low';
+            } else if (score < 70) {
+                element.className = 'risk-score risk-medium';
+            } else {
+                element.className = 'risk-score risk-high';
+            }
+        }
+        
+        function updateScreenshotGallery() {
+            if (!proctoringClient) return;
+            
+            const report = proctoringClient.getStatistics();
+            const screenshots = report.screenshots || [];
+
+            screenshotGallery.innerHTML = '';
+
+            screenshots.forEach(screenshot => {
+                const item = document.createElement('div');
+                item.className = `screenshot-item ${screenshot.severity}`;
+                
+                const img = document.createElement('img');
+                img.src = screenshot.thumbnail;
+                img.alt = `Screenshot ${screenshot.id}`;
+                
+                const info = document.createElement('div');
+                info.className = 'screenshot-info';
+                const time = new Date(screenshot.timestamp).toLocaleTimeString('ru-RU');
+                info.textContent = `${time} | ${screenshot.faceCount} 👤`;
+                
+                item.appendChild(img);
+                item.appendChild(info);
+                
+                // Открытие в модальном окне
+                item.onclick = () => {
+                    modalImage.src = screenshot.thumbnail;
+                    screenshotModal.style.display = 'block';
+                };
+                
+                screenshotGallery.appendChild(item);
+            });
+        }
+        
+        function addEventToLog(event, isCritical = false) {
+            const log = document.getElementById('eventsLog');
+            const eventDiv = document.createElement('div');
+            eventDiv.className = 'event' + (isCritical ? ' critical' : '');
+            
+            const time = new Date(event.timestamp || Date.now()).toLocaleTimeString();
+            const type = event.type || 'unknown';
+            const details = JSON.stringify(event, null, 2).substring(0, 200);
+            
+            eventDiv.innerHTML = `
+                <strong>[${time}]</strong> ${type}<br>
+                <pre>${details}</pre>
+            `;
+            
+            log.insertBefore(eventDiv, log.firstChild);
+            
+            // Обновляем статистику
+            if (type === 'clipboard_paste') {
+                eventCount.pastes++;
+                document.getElementById('statPastes').textContent = eventCount.pastes;
+            } else if (type === 'clipboard_copy') {
+                eventCount.copies++;
+                document.getElementById('statCopies').textContent = eventCount.copies;
+            } else if (type === 'extension_detected') {
+                eventCount.extensions++;
+                document.getElementById('statExtensions').textContent = eventCount.extensions;
+            } else if (type === 'devtools_detected' && event.isOpen) {
+                const devtoolsEl = document.getElementById('statDevTools');
+                devtoolsEl.textContent = 'Открыт';
+                devtoolsEl.className = 'stat-value';
+                devtoolsEl.style.background = 'linear-gradient(135deg, #ef4444 0%, #dc2626 100%)';
+                devtoolsEl.style.webkitBackgroundClip = 'text';
+                devtoolsEl.style.webkitTextFillColor = 'transparent';
+                devtoolsEl.style.backgroundClip = 'text';
+            }
+            
+            // Ограничиваем размер лога
+            while (log.children.length > 100) {
+                log.removeChild(log.lastChild);
+            }
+        }
+        
+        function clearLog() {
+            document.getElementById('eventsLog').innerHTML = '';
+            eventCount = { pastes: 0, copies: 0, extensions: 0 };
+            document.getElementById('statPastes').textContent = '0';
+            document.getElementById('statCopies').textContent = '0';
+            document.getElementById('statExtensions').textContent = '0';
+            const devtoolsEl = document.getElementById('statDevTools');
+            devtoolsEl.textContent = 'Нет';
+            devtoolsEl.className = 'stat-value';
+            devtoolsEl.style.background = '';
+            devtoolsEl.style.webkitTextFillColor = '';
+            devtoolsEl.style.backgroundClip = '';
+        }
+        
+        // Обновление статистики каждые 2 секунды
+        setInterval(() => {
+            if (proctoringClient) {
+                const report = proctoringClient.getStatistics();
+                
+                // Обновляем статистику детекции лиц
+                if (report.faceDetection) {
+                    document.getElementById('currentFaces').textContent = report.faceDetection.currentFaceCount;
+                    document.getElementById('criticalEvents').textContent = report.faceDetection.criticalEvents;
+                    document.getElementById('warningEvents').textContent = report.faceDetection.warningEvents;
+                    
+                    if (report.faceDetection.screenshots) {
+                        document.getElementById('screenshotsCount').textContent = report.faceDetection.screenshots.total;
+                        document.getElementById('screenshotsUploaded').textContent = report.faceDetection.screenshots.uploaded;
+                        document.getElementById('screenshotsSize').textContent = report.faceDetection.screenshots.totalSizeMB;
+                    }
+                }
+                
+                // Обновляем галерею скриншотов
+                updateScreenshotGallery();
+            }
+        }, 2000);
+        
+        // Проверка загрузки MediaPipe при старте страницы
+        window.addEventListener('load', () => {
+            console.log('Страница загружена');
+            console.log('MediaPipe загружен:', typeof FilesetResolver !== 'undefined');
+            
+            if (typeof FilesetResolver === 'undefined') {
+                console.warn('⚠️ MediaPipe не загружен! Детекция лиц будет недоступна.');
+                console.log('Попробуйте обновить страницу или проверьте интернет-соединение.');
+            } else {
+                console.log('✅ MediaPipe готов к использованию');
+            }
+        });
+    </script>
+</body>
+</html>
+
